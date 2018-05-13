@@ -1,0 +1,135 @@
+$Id: README,v 1.10 2014-04-11 12:11:39 roebel Exp $ Diemo Schwarz
+
+README for SWIG wrapper generation for eaSDIF
+
+------------------------------------------------------------------------------
+
+
+1. INTRODUCTION
+
+SWIG  generates  extension  modules   for  all  sorts  of  interpreted
+languages such as Perl, Python, Tcl, Java, Php, that allow you to call
+the eaSDIF and SDIF library functions from these languages.
+
+The extension modules  that can be generated are
+
+- eaSDIF  it contains  high-level classes and is normally
+          sufficient for all programming needs.
+	  the project files for the eaSDIF module can be created
+          using the cmake build system. 
+          It should be available on most existing
+          compilers and OS.
+
+- SDIF	  with all the C-definitions of the low-level SDIF library 
+          (huge, currently commented out!)
+	  the SDIF module is only working on linux systems. 
+	  Due to its size and low level api it is strongly 
+	  suggested to use eaSDIF for scripting languages.
+
+For more info about eaSDIF, the high-level C++ interface to the Ircam 
+SDIF library, see http://www.ircam.fr/sdif or send mail to sdif@ircam.fr.
+
+For more info about SWIG, see http://www.swig.org.
+
+2. BUILDING
+
+currently three different languages (python, perl, java) are supported,
+by means of copy pasting  the different configuration files in the sub
+directories new  bindings for other  languages are easy to  setup. the
+configuration has  been tested with  swig 1.3.31, all  earlier version
+are not supported and will most likely not work.
+
+The cmake  build configuration  provides configurations for  all three
+targets (if the  required libraries and compilers are  avilable on the
+system).   The swig  interfaces  are configured  if the  corresponding
+cmake option DO_YYY (with YYY set to  PYTHON, PERL, or JAVA) is set to
+ON during configuration and build system generation. Multiple swig
+interface targets can be enabled at the same time.
+
+Note, the  cmake build  system requires out  of source  building. This
+means  your  build  directory  should  be  distinct  from  the  source
+directory.
+
+To configure cd into the Easdif build directory (see ../README) and run
+
+> # configuration
+> cmake PATH_TO_EASDIF_SRC_DIR -DEASDIF_DO_PYTHON:BOOL=ON 
+
+# build swig interface (example for python)
+# assume that the build generator has created 
+# standard unix makefiles.
+
+> cd swig/python 
+> make
+> make check
+
+The Interface file is eaSDIF.py and the bindings to the Easdif library
+are in the shared library eaSDIF.so (eaSDIF.dylib, or eaSDIF.dll)
+
+Note, that  other build system configurations than  unix makefiles can
+be  selected  by  means  of  the -Gbuildsystem  switch  of  the  cmake
+command. For more info on cmake look at www.cmake.org.
+
+
+GNU autoools configure
+
+
+If you want to use GNU autotools configuration you are warned that the
+autotools configure does not support out of source tree building. Moreover
+all but the python modules will build only on Linux systems.
+
+
+3. DIRECTORY STRUCTURE
+
+easdif/swig		common files
+easdif/swig/perl5	language dir for perl5
+easdif/swig/python	...
+easdif/swig/java
+...more later...	(especially hoping for matlab, ruby)
+
+
+4. SOURCE FILES
+
+4.1 Main Directory
+
+In the main directory, the .i.in files generate the .i files with the
+proper paths set, via configure:
+
+CMakeLists.txt		configuration for easdif-swig
+easdif-common.i.in	common definitions for the eaSDIF module
+easdif-common-init.i	common initializations for the eaSDIF module
+sdif-common.i.in	common definitions for the SDIF module
+easdif-defines.i	the basic SDIF stuff needed for eaSDIF
+
+4.2 Language Directories
+
+In each language dir, there are these source files:
+
+CMakeLists.txt		cmake build system configuration.
+easdif-<lang>.i		main interface file for eaSDIF module definition, 
+			(includes ../easdif-common.i)
+sdif-<lang>.i		main interface file for SDIF module, 
+			(includes ../sdif-common.i)
+sdiftypemap-<lang>.i	typemaps for both modules
+			(for SdifSignature and SdifStringT)
+...test-scripts, etc.
+
+
+4.3 The Module Definition File
+
+Each <lang>/easdif-<lang>.i has to include ../easdif-common.i and has
+to define the initialization of the module, and the class renaming:
+
+	#define SWIG_RENAME_EASDIF
+
+if <lang> does force you to use the eaSDIF qualifier anyway, to avoid
+the ugly and redundant eaSDIF::SDIFMatrix().
+
+
+5. TODO
+
+- finish support for selection functions
+- direct set/get of text matrices
+- map/tie matrix columns to hash keys with array value
+
+

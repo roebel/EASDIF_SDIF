@@ -1,0 +1,123 @@
+FIND_PROGRAM(PYTHON python)
+MESSAGE(STATUS "python executable  ${PYTHON}")
+IF(PYTHON)
+  EXECUTE_PROCESS(COMMAND ${PYTHON}-config  --ldflags OUTPUT_VARIABLE out ERROR_VARIABLE err OUTPUT_STRIP_TRAILING_WHITESPACE)
+  SET(PYTHON_LIBRARY ${out})
+  EXECUTE_PROCESS(COMMAND ${PYTHON}-config  --includes OUTPUT_VARIABLE out ERROR_VARIABLE err OUTPUT_STRIP_TRAILING_WHITESPACE)
+  STRING(REGEX REPLACE "[ \t]+" ";" PYTHON_INCLUDE_PATH ${out})
+  MESSAGE(STATUS "Python includes <${PYTHON_INCLUDE_PATH}>")
+  LIST(REMOVE_DUPLICATES PYTHON_INCLUDE_PATH)
+  IF(DEBUG)
+    MESSAGE(STATUS "Python library ${PYTHON_LIBRARY}")
+    MESSAGE(STATUS "Python includes <${PYTHON_INCLUDE_PATH}>")
+  ENDIF(DEBUG)
+  FOREACH(PP ${PYTHON_INCLUDE_PATH})
+    IF(DEBUG)
+      MESSAGE("pp ${PP}")
+    ENDIF(DEBUG)
+    STRING(REGEX REPLACE "-I" "" PPP ${PP})
+    INCLUDE_DIRECTORIES("${PPP}")
+  ENDFOREACH(PP ${PYTHON_INCLUDE_PATH})
+
+  EXECUTE_PROCESS(COMMAND ${PYTHON} -c "from __future__ import print_function\nimport numpy\nif hasattr(numpy,'get_include'):\n ss=numpy.get_include()\nelse: ss=numpy.get_numpy_include()\nprint(ss)" OUTPUT_VARIABLE out ERROR_VARIABLE err OUTPUT_STRIP_TRAILING_WHITESPACE)
+  if ( out STREQUAL "" )
+    MESSAGE(FATAL_ERROR "EASDIF Python interface :: Cannot determine NUMPY includes")
+  endif  ( out STREQUAL "" )
+  STRING(REGEX REPLACE "[ \t]+" ";" NUMPY_INC_HINT ${out})
+  MESSAGE("NUMPY_INC_HINT ${NUMPY_INC_HINT}")
+  IF (NUMPY_INC_HINT)
+    FIND_PATH(NUMPY_INCLUDE NAME "numpy/arrayobject.h" NO_DEFAULT_PATH PATHS "${NUMPY_INC_HINT}")
+  ENDIF(NUMPY_INC_HINT)
+  MESSAGE("NUMPY_INCLUDE ${NUMPY_INCLUDE}")
+
+  IF (NUMPY_INCLUDE)
+    INCLUDE_DIRECTORIES("${NUMPY_INCLUDE}")    
+  ENDIF(NUMPY_INCLUDE)
+
+  IF (APPLE)
+    ADD_LINK_FLAGS(MODULE "-bundle -undefined dynamic_lookup " )
+  ENDIF(APPLE)
+
+  EXECUTE_PROCESS(COMMAND ${PYTHON}  --version OUTPUT_VARIABLE out ERROR_VARIABLE err OUTPUT_STRIP_TRAILING_WHITESPACE)
+  STRING(REGEX REPLACE "[a-zA-Z0-9 \t]* \([0-9]+[.][0-9]+\).*"  "\\1" PYTHON_VERSION ${err}${out})
+  STRING(REGEX REPLACE "\([0-9]+\)[.][0-9]+.*"  "\\1" PYTHON_VERSION_MAJOR ${PYTHON_VERSION})
+  MESSAGE(STATUS "PYTHON_VERSION ${PYTHON_VERSION}")
+  SET(BUILD_WITH_INSTALL_RPATH ON)
+  
+  SET(INTERFACE_SRC ${CMAKE_CURRENT_SOURCE_DIR}/easdif-python.i)
+  
+  SET_SOURCE_FILES_PROPERTIES(${INTERFACE_SRC} PROPERTIES CPLUSPLUS ON)
+  IF (NUMPY_INCLUDE)  
+    SET(CMAKE_SWIG_FLAGS "-I${CMAKE_CURRENT_BINARY_DIR}" "-I${CMAKE_CURRENT_SOURCE_DIR}" "-DSWIG_FILE_WITH_INIT=1"  "-DUSE_NUMPY=1")
+    ADD_DEFINITIONS( "-DSWIG_FILE_WITH_INIT=1"  "-DUSE_NUMPY=1")
+  ELSE(NUMPY_INCLUDE)  
+    SET(CMAKE_SWIG_FLAGS "-I${CMAKE_CURRENT_BINARY_DIR}" "-I${CMAKE_CURRENT_SOURCE_DIR}")
+  ENDIF(NUMPY_INCLUDE)
+
+  MESSAGE("PYTHON Major VERSION ${PYTHON_VERSION_MAJOR}")
+
+  IF(PYTHON_VERSION_MAJOR  EQUAL 3)
+    MESSAGE("ENABLE SWIG Python 3 flag")
+    SET(CMAKE_SWIG_FLAGS ${CMAKE_SWIG_FLAGS} "-py3" "-DSWIG_PYTHON_3=1")
+  ENDIF(PYTHON_VERSION_MAJOR EQUAL 3)
+  
+  SWIG_ADD_MODULE(eaSDIF python  ${INTERFACE_SRC}     )
+  # libraries will should be found on runtime for this to work on mac oswe need to add linker options 
+  # for MODULE targets as done above  "-bundle -undefined dynamic_lookup "
+  #   SWIG_LINK_LIBRARIES(eaSDIF  Easdif_static_pic${DEBUGEXT}  ${PYTHON_LIBRARY})
+  SWIG_LINK_LIBRARIES(eaSDIF  Easdif_static_pic${DEBUGEXT} )
+
+  ADD_CUSTOM_TARGET(pythonswig)
+  ADD_DEPENDENCIES(pythonswig ${SWIG_MODULE_eaSDIF_REAL_NAME})
+  CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/test.py.in ${CMAKE_CURRENT_BINARY_DIR}/test.py)
+
+  CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/example.py ${CMAKE_CURRENT_BINARY_DIR}/example.py)
+  
+  CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/setup.py.in ${CMAKE_CURRENT_BINARY_DIR}/setup.py)
+
+
+  # alternative version, will not  work with interl compiler!
+  CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/setup2.py.in ${CMAKE_CURRENT_BINARY_DIR}/setup2.py)
+  ADD_CUSTOM_target(pythonswig2 
+    ${PYTHON} setup2.py build
+    DEPENDS  Easdif_static_pic${DEBUGEXT}
+    SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/easdif-python.i ${CMAKE_CURRENT_SOURCE_DIR}/../numpy.i ${CMAKE_CURRENT_SOURCE_DIR}/sdiftypemap-python.i
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    )
+
+
+
+  IF(APPLE)
+    SET(LOADPATH DYLD_LIBRARY_PATH)
+  ELSE (APPLE)
+    IF(WIN32)
+      SET(LOADPATH PATH)
+    ELSE(WIN32)
+      IF ( "${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+        SET(LOADPATH LD_LIBRARY_PATH)
+      ENDIF( "${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+      IF ( "${CMAKE_SYSTEM_NAME}" MATCHES "FreeBSD")
+        SET(LOADPATH DYLD_LIBRARY_PATH)
+      ENDIF( "${CMAKE_SYSTEM_NAME}" MATCHES "FreeBSD")
+    ENDIF(WIN32)
+  ENDIF(APPLE)
+  
+  ADD_CUSTOM_TARGET(checkswigpython
+    COMMAND echo Testing python swig interface
+    COMMAND ${LOADPATH}=$(CMAKE_BINARY_DIR)/lib ${PYTHON} ${CMAKE_CURRENT_BINARY_DIR}/test.py)
+  ADD_DEPENDENCIES(checkswigpython pythonswig)
+  ADD_DEPENDENCIES(checkswig checkswigpython)
+
+  ADD_CUSTOM_TARGET(install_python_easdif_module_locally
+    COMMENT install python swig interface into userbase
+    COMMAND ${PYTHON} setup.py install --user
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+  ADD_DEPENDENCIES(install_python_easdif_module_locally pythonswig)
+  ADD_CUSTOM_TARGET(install_python_easdif_module_globally    
+    COMMENT install python swig interface into userbase
+    COMMAND ${PYTHON} setup.py install
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+
+  ADD_DEPENDENCIES(install_python_easdif_module_globally pythonswig)
+ENDIF(PYTHON) 
+

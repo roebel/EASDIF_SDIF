@@ -1,0 +1,14 @@
+#!/usr/bin/env ${PYTHON}
+
+from distutils.core import setup
+
+setup(name='eaSDIF',
+      version="${EASDIF_VERSION}",
+      description='SDIF file handling support for python',
+      author='Numerous',
+      author_email='sdif@ircam.fr',
+      url='http://sourceforge.net/projects/sdif/',
+      py_modules=['eaSDIF'],
+      license='LGPL',
+      data_files=[('lib/python${PYTHON_VERSION}/site-packages', ['${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/_eaSDIF.so'])],
+     )

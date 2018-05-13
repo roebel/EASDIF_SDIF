@@ -1,0 +1,396 @@
+dnl -*-autoconf-*-  (No, it's an autoconf file!)
+dnl -*-m4-*- (He emacs, it's a m4 file)
+dnl $Id: configure.in,v 1.63 2006-12-12 23:36:31 roebel Exp $
+dnl
+dnl configure.in		Feb 2003      Axel Roebel
+dnl
+dnl Source file for GNU autoconf, generates configure script.
+dnl
+dnl
+dnl This file is part of the IRCAM EASDIF Library (http://www.ircam.fr/sdif)
+dnl
+dnl Copyright (C) 2002-2003 by IRCAM-Centre Georges Pompidou, Paris, France.
+dnl
+dnl This program is free software; you can redistribute it and/or
+dnl modify it under the terms of the GNU Lesser General Public License
+dnl as published by the Free Software Foundation; either version 2
+dnl of the License, or (at your option) any later version.
+dnl
+dnl See file COPYING for further informations on licensing terms.
+dnl
+dnl This program is distributed in the hope that it will be useful,
+dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
+dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+dnl GNU Lesser General Public License for more details.
+dnl
+dnl You should have received a copy of the GNU Lesser General Public License
+dnl along with this program; if not, write to the Free Software
+dnl Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+dnl
+dnl
+dnl The EASDIF library provides an Easy Api for IRCAMs SDIF library. 
+dnl
+dnl
+
+dnl $Log: not supported by cvs2svn $
+dnl Revision 1.62  2006/12/12 23:28:16  roebel
+dnl Fixed sdif version determination.
+dnl
+dnl Revision 1.61  2006/12/12 14:02:05  roebel
+dnl Added version substitutions that are compatible with the new cmake build system.
+dnl
+dnl Revision 1.60  2006/12/08 18:42:22  roebel
+dnl Updated to 1.3.0.
+dnl
+dnl Revision 1.59  2006/11/26 20:30:31  roebel
+dnl Version 1.2.9.
+dnl
+dnl Revision 1.58  2006/04/22 11:49:28  roebel
+dnl Version 1.2.7
+dnl
+dnl Revision 1.57  2006/02/22 14:20:42  roebel
+dnl Version 1.2.6
+dnl
+dnl Revision 1.56  2006/01/05 08:52:30  roebel
+dnl Version 1.2.5.
+dnl
+dnl Revision 1.55  2005/12/19 11:46:33  roebel
+dnl Version 1.2.4
+dnl
+dnl Revision 1.54  2005/07/25 13:33:29  roebel
+dnl Version 1.2.3.
+dnl
+dnl Revision 1.53  2005/06/06 14:12:47  roebel
+dnl Updated log and version.
+dnl
+dnl Revision 1.52  2005/06/02 22:24:45  roebel
+dnl updated version and log.
+dnl
+dnl Revision 1.51  2005/05/30 21:48:42  roebel
+dnl Updated version and ChangeLog.
+dnl
+dnl Revision 1.50  2005/05/24 13:13:44  roebel
+dnl Version 1.2.1a.
+dnl
+dnl Revision 1.49  2005/05/24 09:55:46  roebel
+dnl Version 1.2.0
+dnl
+dnl Revision 1.48  2005/05/20 21:33:05  roebel
+dnl Version 1.2.0.
+dnl
+dnl Revision 1.47  2005/05/03 16:24:21  roebel
+dnl Version 1.1.0
+dnl
+dnl Revision 1.46  2005/04/25 19:41:06  roebel
+dnl Extension of compiler flag variables CFLAGS and CXXFLAGS did not work properly because autoconf sets default values that may contradict the values we select.
+dnl Therefore, we now store the externally set CFLAGS/CXXFLAGS to later use them as default values.
+dnl
+dnl Revision 1.45  2005/02/25 16:27:30  roebel
+dnl Added missing barces to ninstselprogs
+dnl
+dnl Revision 1.44  2005/02/04 12:31:43  roebel
+dnl Fixed return value of SDIFEntity::WriteFrame
+dnl
+dnl Revision 1.43  2005/02/01 09:58:02  roebel
+dnl Use environment variables CFLAGS and CXXFLAGS to initialize MakeFile variables
+dnl
+dnl Revision 1.42  2004/09/10 09:20:53  roebel
+dnl Extend frame directory to contain the matrix signatures for each frame.
+dnl No longer needs to re read the frame to decide whether frame is selected.
+dnl
+dnl Revision 1.41  2004/09/09 19:17:39  roebel
+dnl Version 1.0.0beta:
+dnl First complete version of iterator access when reading files. Frame-Iterators use the
+dnl internal Frame Directory that each Entity will generate and update on the fly
+dnl to minimize disk access during positioning.
+dnl
+dnl Revision 1.40  2004/09/08 09:18:16  roebel
+dnl Version 0.11.1
+dnl
+dnl Revision 1.39  2004/08/25 18:23:57  roebel
+dnl Version 0.11.0
+dnl removed SetNbMatrix which was confusing because people used it
+dnl to resize a Frame. Added a real resize function.
+dnl Added size(), resize() and clear() functions to
+dnl have more consistent interface compared to stl containers.
+dnl
+dnl Revision 1.38  2004/08/25 09:22:12  roebel
+dnl SDIFEntity::Rewind(time) no longer private.
+dnl
+dnl Revision 1.37  2004/07/29 13:45:27  roebel
+dnl Version 0.10.1
+dnl
+dnl Revision 1.36  2004/07/28 14:59:25  roebel
+dnl Version 0.10.0:
+dnl Matrix::SetCol/SetRow and unsigned char element access.
+dnl New pkg-config for debug version of Easdif.
+dnl
+dnl Revision 1.35  2004/07/26 11:29:59  roebel
+dnl Fixed debug version of non installable (demo) files.
+dnl
+dnl Revision 1.34  2004/07/26 10:27:34  roebel
+dnl Version 0.9.1:
+dnl added support for pthreads.
+dnl
+dnl Revision 1.33  2004/07/21 13:33:38  roebel
+dnl Version 0.9.0.
+dnl
+dnl Revision 1.32  2004/07/20 19:33:07  roebel
+dnl Version 0.8.5
+dnl
+dnl Added support for row and column selection.
+dnl Matrix reading/writing reorganized to handle complete matrices whenever
+dnl possible (if no selection on row or column is used).
+dnl Drastically improves IO performance!
+dnl
+dnl Revision 1.31  2004/07/13 15:02:14  roebel
+dnl Version 0.8.4
+dnl
+dnl Revision 1.30  2004/03/19 22:09:49  roebel
+dnl Version 0.8.3: Added new methods to set marix signatures.
+dnl
+dnl Revision 1.29  2004/03/19 01:03:25  roebel
+dnl Finalized support for --enable-ddebug
+dnl
+dnl Revision 1.28  2004/02/11 19:28:16  roebel
+dnl Added inline function to test state of entity. Added function to access NVTs that indicates existance of name.
+dnl
+dnl Revision 1.27  2004/02/02 18:07:22  roebel
+dnl Version 0.8.1: bug fix in sdifframe establishing the possibility to
+dnl resize matrices within the frame.
+dnl
+dnl Revision 1.26  2004/01/19 16:20:24  roebel
+dnl Version 0.8.0
+dnl
+dnl Revision 1.25  2003/11/18 18:24:21  roebel
+dnl Version 0.7.3, added check for sstream/strstream header.
+dnl changed language to CPLUSPLUS.
+dnl
+dnl Revision 1.24  2003/08/06 18:03:03  roebel
+dnl demo command line follows configured prefix
+dnl
+dnl Revision 1.23  2003/07/10 17:19:42  roebel
+dnl Finished gcc3_2 suffix support for test programs
+dnl
+dnl Revision 1.22  2003/07/09 21:19:47  roebel
+dnl Provide configure switch to add gccversion to library name to distinguish
+dnl gcc3.2 from gcc2.96 compiled libraries.
+dnl
+dnl Revision 1.21  2003/07/07 10:29:46  roebel
+dnl Added support for eInt1 and eUInt1 data types, resize of matrix now reinitializes all elements to 0
+dnl
+dnl Revision 1.20  2003/05/26 16:10:17  roebel
+dnl Fixed version macros
+dnl
+dnl Revision 1.19  2003/05/24 00:28:34  roebel
+dnl Version 0.7.0
+dnl
+dnl Revision 1.18  2003/05/22 21:37:53  roebel
+dnl version 0.6.0
+dnl
+dnl Revision 1.17  2003/05/21 20:40:49  roebel
+dnl Version 0.5.1
+dnl
+dnl Revision 1.16  2003/05/19 14:06:00  roebel
+dnl Resolved possible name conflict due to declaration of VERSION in installed files.
+dnl easdif_config.h is used only locally while easdif_version.h is installed and used by
+dnl user applications.
+dnl VERSION is now a c-string.
+dnl
+dnl Revision 1.15  2003/05/18 21:12:03  roebel
+dnl Version 0.5.0
+dnl
+dnl Revision 1.14  2003/04/18 16:46:54  schwarz
+dnl Made easdif swiggable -> update version to 0.4.0, because of
+dnl small API changes:
+dnl - eof() returns bool, not bool&
+dnl - Matrix::Set takes int/float, not int&/float&
+dnl
+dnl Revision 1.13  2003/04/09 16:10:56  roebel
+dnl Version 0.3.2 (first public release).
+dnl
+dnl Revision 1.12  2003/04/09 12:30:42  roebel
+dnl Changed default configuration back to enable-shared but added
+dnl README.MacOSX to announce problems with shared libraries to users.
+dnl
+dnl Revision 1.11  2003/04/08 23:21:54  roebel
+dnl Added test for program dot, Moved determination of SDIF version in Makefile because SDIF may be configured only at the end of configure
+dnl
+dnl Revision 1.10  2003/04/08 18:28:27  roebel
+dnl Support SDIF version in Easdif Makefiles.
+dnl
+dnl Revision 1.9  2003/04/06 16:43:30  roebel
+dnl Added copyright info.
+dnl
+dnl Revision 1.8  2003/04/03 13:35:21  schwarz
+dnl Version number set in configure.in, generates Doxyfile with correct number.
+dnl Version numbering scheme with 3 fields:
+dnl - first  number: major version, only gigantic changes
+dnl - second number: minor version, records changes in API
+dnl 		 (added/removed functions, changed prototypes)
+dnl - third  number: release number, for intermediate releases,
+dnl 		 bug fixes, etc. that don't change the API
+dnl
+
+
+
+dnl To check if directory is present
+AC_INIT(easdif/easdif.h)
+
+dnl ############################################################
+dnl PACKAGE NAME AND VERSION
+AC_MSG_RESULT(PACKAGE NAME)
+
+PACKAGE=Easdif
+
+EASDIF_VERSION_MAJ=1
+EASDIF_VERSION_MIN=3
+EASDIF_VERSION_RELEASE=0
+
+VERSION="${EASDIF_VERSION_MAJ}.${EASDIF_VERSION_MIN}.${EASDIF_VERSION_RELEASE}"
+EASDIF_VERSION="${EASDIF_VERSION_MAJ}.${EASDIF_VERSION_MIN}.${EASDIF_VERSION_RELEASE}"
+
+# check sdif version.
+SDIF_VERSION_MAJOR=`grep SDIF_VERSION_MAJOR=      <${srcdir}/SDIF/configure.in |  sed -e "s/SDIF_VERSION_MAJOR=\(@<:@0-9@:>@*\)/\1/"`
+SDIF_VERSION_MINOR=`grep SDIF_VERSION_MINOR=      <${srcdir}/SDIF/configure.in |  sed -e "s/SDIF_VERSION_MINOR=\(@<:@0-9@:>@*\)/\1/"`
+SDIF_VERSION_RELEASE=`grep SDIF_VERSION_RELEASE=  <${srcdir}/SDIF/configure.in |  sed -e "s/SDIF_VERSION_RELEASE=\(@<:@0-9@:>@*\)/\1/"`
+sdif_version="${SDIF_VERSION_MAJOR}.${SDIF_VERSION_MINOR}.${SDIF_VERSION_RELEASE}"
+AC_SUBST(sdif_version)
+
+AC_SUBST(PACKAGE)
+AC_SUBST(VERSION)
+AC_SUBST(EASDIF_VERSION)
+AC_SUBST(EASDIF_VERSION_MAJ)
+AC_SUBST(EASDIF_VERSION_MIN)
+AC_SUBST(EASDIF_VERSION_RELEASE)
+
+# prevent the use of the autoconf default values 
+# we impose our own handling
+EXTERNAL_CXXFLAGS=$CXXFLAGS
+
+AM_INIT_AUTOMAKE($PACKAGE,$VERSION)
+
+AM_CONFIG_HEADER(easdif/easdif_config.hpp)
+
+
+dnl ############################################################
+dnl Checks for programs.
+AC_PROG_CXX
+AC_PROG_INSTALL
+AC_PROG_RANLIB
+
+AC_SUBST(HAVEDOT)
+AC_CHECK_PROG(HAVEDOT,dot,YES,NO)
+
+
+dnl Check for libtool
+dnl you better disable shared libraries due to problems with libtool
+dnl on MacOSX.
+
+AC_PROG_LIBTOOL
+
+dnl Configure SDIF
+export enable_cpp=yes
+AC_CONFIG_SUBDIRS(SDIF)
+
+AC_CONFIG_SUBDIRS(swig)
+
+
+dnl Check for headers
+AC_MSG_RESULT(CHECK FOR HEADERS)
+AC_HEADER_STDC
+dnl AC_CHECK_HEADERS(SDIF/include/sdif.h)
+
+AC_LANG_CPLUSPLUS
+AC_CHECK_HEADERS(sstream strstream,break)
+
+
+dnl ############################################################
+dnl DEBUG feature
+
+AC_SUBST(SELLIB)
+AC_SUBST(SELPROG)
+AC_SUBST(NOINSTSELPROGS)
+SELPROG="easdifRmNVT\$(EXEEXT)"
+NOINSTSELPROGS="tutofini\$(EXEEXT) tutorini\$(EXEEXT)"
+
+AC_ARG_ENABLE(suffix,
+[  --enable-suffix         add suffix _gcc3_2 to library name to distinguish between old and new C++ ABI],
+[echo FEATURE enable-suffix... $enableval;
+if test "$enableval" = "yes"; then
+        SELLIB=libEasdif_gcc3_2.la;
+	AM_CONDITIONAL(GCCSUFFIX,true)
+else
+        SELLIB=libEasdif.la
+	AM_CONDITIONAL(GCCSUFFIX,false)
+fi ],
+[
+SELLIB=libEasdif.la;
+AM_CONDITIONAL(GCCSUFFIX,false)
+])
+
+AC_SUBST(PKGDEBUG)
+PKGDEBUG=
+AC_ARG_ENABLE(debug,
+[  --enable-debug          compile with debug enabled],
+[echo FEATURE enable-debug... $enableval; 
+if test "$enableval" = "yes"; then
+	CXXFLAGS="$EXTERNAL_CXXFLAGS -g2 -Wall";
+	SELLIB=libEasdif-debug.la;
+	SELPROG="easdifRmNVT-debug\$(EXEEXT)"
+	NOINSTSELPROGS="tutofini-debug\$(EXEEXT) tutorini-debug\$(EXEEXT)"
+	PKGDEBUG="-debug";
+else 
+	CXXFLAGS="$EXTERNAL_CXXFLAGS -O3";
+fi ],
+[
+CXXFLAGS="$EXTERNAL_CXXFLAGS -O3";
+])
+
+
+
+AC_SUBST(HAVE_PTHREAD)
+AC_MSG_CHECKING(pthreads requested)
+AC_ARG_ENABLE(pthreads,
+[--enable-pthreads          enable/disable check for availability of thread support to render sdif library thread safe (default: check)],
+[ dnl actions if enable-pthreads given
+AC_MSG_RESULT($enableval)
+if test "$enableval" = "yes"; then
+  ACX_PTHREAD
+  CC=$PTHREAD_CC
+  LIBS="$PTHREAD_LIBS $LIBS"
+  CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
+  CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS"
+else
+unset HAVE_PTHREAD;
+fi
+],
+[ dnl actions if enable-pthreads not given
+AC_MSG_RESULT(yes)
+  ACX_PTHREAD 
+  CC=$PTHREAD_CC
+  LIBS="$PTHREAD_LIBS $LIBS"
+  CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
+  CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS"
+])
+
+dnl ############################################################
+dnl find SDIF objects that have to be included into Easdif
+AC_MSG_RESULT(FIND SDIF FILES)
+AC_SUBST(SDIFCPPLIB)
+SDIFCPPLIB=../SDIF/sdifcpp/libsdif-cpp.la
+
+dnl ############################################################
+dnl CREATE OUTPUT FILES
+AC_MSG_RESULT(CREATE OUTPUT FILES)
+AC_OUTPUT(Makefile 
+easdif/Makefile 
+easdif/easdif_version.hpp
+easdif/easdifintro.hpp
+test/Makefile
+Easdif.pc
+Easdif-debug.pc
+Doxyfile
+)
+
+AC_MSG_RESULT(END OF $PACKAGE CONFIGURATION)

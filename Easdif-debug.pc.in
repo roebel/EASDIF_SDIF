@@ -1,0 +1,10 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: Easdif
+Description: the Easy Interface for the Sound Description Interchange File Format library
+Version: @VERSION@
+Libs: -L${libdir} -lEasdif-debug @PTHREAD_CFLAGS@ @PTHREAD_LIBS@
+Cflags: -I${includedir} @PTHREAD_CFLAGS@

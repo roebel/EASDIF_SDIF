@@ -1,0 +1,59 @@
+#! /bin/bash
+
+if [ "$1" = "" ]; then 
+echo "usage:   $0 target-root-dir "
+echo "example: $0 /u/formes/share "
+exit 1
+else 
+PREFIX="$1" 
+fi 
+
+mkdir build_$SYS
+cd  build_$SYS
+# cleanup existing config.
+rm -f CMakeCache.txt
+# cmake may need to run twice such that all variables stabilize
+cmake -DPKGCONFIGDIR:PATH=default -DCMAKE_INSTALL_PREFIX:PATH=$PREFIX -DCMAKE_INSTALL_PREFIX_DEFAULTS_INIT:BOOL=1 cmake -DEASDIF_BUILD_MEX:BOOL=OFF  ..
+cmake -DPKGCONFIGDIR:PATH=default -DCMAKE_INSTALL_PREFIX:PATH=$PREFIX -DCMAKE_INSTALL_PREFIX_DEFAULTS_INIT:BOOL=1 cmake -DEASDIF_BUILD_MEX:BOOL=OFF  ..
+make set_release
+make clean
+make install
+
+# if [ "$1" = "" ]; then 
+# echo "usage:   $0 target-root-dir [debug]"
+# echo "example: $0 /u/formes/share "
+# echo "or       $0 /u/formes/share debug"
+# exit 1
+# else 
+# PREFIX="$1" 
+# fi 
+# echo Installing in $PREFIX 
+# export PKG_CONFIG_PATH="$PREFIX"/lib/pkgconfig:/usr/X11R6/lib/pkgconfig:$PKG_CONFIG_PATH 
+
+# if [ `uname` = "Darwin" -a `arch` = "ppc" ];then
+# if [ -r /Developer/SDKs/MacOSX10.3.9.sdk ] ; then
+# export CFLAGS="-isysroot /Developer/SDKs/MacOSX10.3.9.sdk"
+# export MACOSX_DEPLOYMENT_TARGET=10.3
+# else
+# echo SDK /Developer/SDKs/MacOSX10.3.9.sdk not installed using standard compiler tools
+# fi
+# elif [ `uname` = "Darwin" -a `arch` = "i386" ];then
+# if [ -r /Developer/SDKs/MacOSX10.4u.sdk ] ; then
+# export CFLAGS="-isysroot /Developer/SDKs/MacOSX10.4u.sdk"
+# export MACOSX_DEPLOYMENT_TARGET=10.4
+# else
+# echo SDK /Developer/SDKs/MacOSX10.4u.sdk not installed using standard compiler tools
+# fi
+# fi
+
+# if [ "$2" != "" ];then
+# if [ "$flags" = "" ];then
+# export CFLAGS=-DDEBUG
+# export configflags=--enable-debug
+# else
+# export CFLAGS="$CFLAGS -DDEBUG"
+# export configflags=--enable-debug
+# fi
+# fi
+# echo $CFLAGS
+# ./all.ircam.sh "$PREFIX"

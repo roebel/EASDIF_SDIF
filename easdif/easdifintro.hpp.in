@@ -1,0 +1,363 @@
+/*
+ * This file is part of the IRCAM EASDIF Library (http://www.ircam.fr/sdif)
+ *
+ * Copyright (C) 2002-2003 by IRCAM-Centre Georges Pompidou, Paris, France.
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * See file COPYING for further informations on licensing terms.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ *
+ * The EASDIF library provides an Easy Api for IRCAMs SDIF library. 
+ *
+ */
+
+/*! \mainpage Easdif
+ *
+ * \section intro Introduction
+ *
+ * Easdif is a C++ interface based on IRCAM's Sdif library.
+ * The Easdif library includes all sdif functions and provides 
+ * a much simpler API. Easdif @EASDIF_VERSION@ contains 
+ * Sdif version @sdif_version@.
+ * 
+ * \section example Example
+ *
+ * To use the library the include file easdif.h has to be included.
+ * Below, is an simple example 
+ * for reading and writing a file with modifications. It demonstrates
+ * first the use of the basic classes and methods. In the second
+ * part the use of the frame directory is shown. 
+ * 
+\code
+#include "easdif/easdif.h"
+
+using namespace Easdif;
+
+int main(int argc, char** argv)
+{  
+
+    /* initialise the SDIF library and install exceptions */
+    EasdifInit();
+
+    SDIFEntity readentity;
+    SDIFEntity entity;
+   
+    SDIFFrame frame;
+    SDIFFrame frameTowrite;
+
+    int i = 0;
+    int y = 0;
+
+    /******** NAME VALUE TABLE ********/
+    /* for making NameValueTables to the EntityToWrite */
+    SDIFNameValueTable NameValueTable;
+    NameValueTable.AddNameValue("name", "value");
+    NameValueTable.AddNameValue("the_name","the_value");
+    NameValueTable.AddNameValue("Eas","dif");
+
+    SDIFNameValueTable NameValueTable2;
+    NameValueTable2.AddNameValue("an", "other");
+    NameValueTable2.AddNameValue("name","value");
+
+    /*for adding the Name Value Tables to the EntityToWrite*/
+    entity.AddNVT(NameValueTable);
+    /*for adding with a StreamID number 3 for example */
+    entity.AddNVT(NameValueTable2, 3);
+
+    /*for adding the Name Value Tables of the EntityRead, the file of
+     *EntityToRead must be Open*/
+
+    try {
+      if (!readentity.OpenRead(argv[1]) ) {
+	std::cerr << "Could not open input file :"<<argv[1]<<std::endl;
+	exit(1);
+      }
+    }
+    /* Openread may through BadHeader exception in case the input file
+     * is not a valid SDIF file */
+    catch(SDIFBadHeader& e)
+      {
+	e.ErrorMessage();
+	exit(1);
+      }
+
+    y = readentity.GetNbNVT();
+    if( y != 0)
+    {
+	for (i = 0 ; i < y ; i++)
+	{
+	    entity.AddNVT(readentity.GetNVT(i));
+	}	
+	entity.GetNVT(0).PrintNameValue("the_name");
+	entity.GetNVT(0).PrintNameValue("notthere");
+    }
+
+    /******** DESCRIPTION TYPE ********/
+    /*to copy the descriptions type of EntityRead to EntityToWrite*/
+    /*entity.SetTypeString(readentity.GetTypeString()); in comment 
+     *for exception*/
+
+    /*for adding descriptions types : the description must be done before
+     *the opening of the EntityToWrite (they are writing when opening)*/
+    /* Add a matrix type must be done before to add a frame type*/
+    entity.AddMatrixType("1FQ0", "ColumnToAdd1, ColumnToAdd2");
+    entity.AddMatrixType("1NEW", "col1, col2, col3, col_i, col_n");
+   
+    entity.AddFrameType("1NEW", "1NEW NewMatrix; 1FQ0 New1FQ0");
+
+    /* to open a file for writing */
+    if(!entity.OpenWrite("FileToWrite.sdif")) {
+	std::cerr << "Could not open output file : FileToWrite.sdif"<<std::endl;
+	exit(1);
+    }
+
+
+    /******** SELECTION ********/
+    /* if you want to change the selection of the EntityRead use the same 
+     * notation as for selecting when opening the file */
+    readentity.ChangeSelection(":1FOB,1HRM/1FOF,1HRM");
+
+    /******** READ AND WRITE  ********/
+    /* to show the exception : we break the loop with an exception */
+    try{
+      while (1)	{
+
+	/* reading the next frame of the EntityRead, return the number of
+	 * bytes read, return 0 if the frame is not selected 
+	 * and produces an exception if eof is reached */
+	if(!readentity.ReadNextFrame(frame))	    
+	  continue;
+	
+	/* for adding new matrix in EntityToWrite */
+	for (unsigned int i=0 ; i < frame.GetNbMatrix() ; i++)
+	  {
+	    /*take the matrix number "i" and put it in tmpMatrix */
+	    SDIFMatrix tmpMatrix = frame.GetMatrix(i);
+	    
+	    /*add a matrix in the matrix vector of the frame*/
+	    frameTowrite.AddMatrix(tmpMatrix);
+	    /*an other method to add just the frame selected in file:
+	     * frameTowrite.AddMatrixSelected(readentity.GetFile(),
+	     * tmpMatrix);*/
+
+	    /* if you want to access to the data : an example, if we want 
+	     * to multiply with 2 the last column of a matrix : */
+	    double dou;
+	    int ncols = tmpMatrix.GetNbCols();
+	    for(int i = 0 ; i < tmpMatrix.GetNbRows() ; i++)
+	      {
+		//dou = tmpMatrix.GetDouble(i, ncols-1);
+		/* to get the value in the double dou*/
+		tmpMatrix.Get(i, ncols-1,dou);
+		/* an other method can be :
+		   dou = tmpMatrix.GetDouble(i, ncols-1);
+		*/
+		tmpMatrix.Set(i, ncols-1,2.*dou);
+	      }
+	  }
+	
+	/* to set the header of the new frame with the one of a frame :*/
+	frameTowrite.SetHeader(frame.GetSignature(),
+			       frame.GetStreamID(),
+			       frame.GetTime() );
+	
+	/* an other method can be :
+	   frameTowrite.SetStreamID(frame.GetStreamID());
+	   frameTowrite.SetTime(frame.GetTime());
+	   frameTowrite.SetSignature(frame.GetSignature());
+	*/
+	
+	/* to write the EntityToWrite */
+	frameTowrite.Write(entity);
+	
+	/* for reading a frame of the EntityToWrite, this make an 
+	 * exception because the file is at end*/
+	//frame.Read(entity);
+	
+	/* clean the frames */
+	frameTowrite.ClearData();
+	frame.ClearData();
+      }
+    }
+    
+    /* to catch an exception */
+    catch(SDIFEof& e)
+      {
+	/* if we want an access to the file */
+	const SdifFileT *sf = e.sdifFile();
+	std::cerr << " Catch EOF for file " << (sf?sf->Name:"unknown") << " -- ending loop 1 " << std::endl;
+	/* to have the error message */
+      }
+    
+    catch(SDIFUnDefined& e)
+      {
+	std::cerr << " Catch Undefined " << std::endl;	
+	e.ErrorMessage();
+      }
+    
+    catch(Easdif::SDIFException&e)
+      {
+	std::cerr << " Catch other SDIFException " << std::endl;
+	e.ErrorMessage();
+      }
+    catch(std::exception &e)
+      {
+	std::cerr << " Catch other Exception: " << e.what() <<std::endl;
+
+      }
+
+    /* close output */
+    entity.Close();
+
+    if(readentity.isSeekable() ) {
+      std::cerr << "seekable is true\n";
+      try {
+        // try file positioning
+        Easdif::SDIFFrame ff;
+        std::string signature;
+        
+        // frame directory is still off
+        //  for greater efficiency you should enable it right after
+        //  opening the file by means of
+        //  readentity.EnableFrameDir()
+        readentity.Rewind();
+        std::cerr << "frameDirectory is off (== 0): "<<readentity.IsFrameDir() << " \n";
+        readentity.EnableFrameDir();
+        std::cerr << "frameDirectory should be on (==1):  "<<readentity.IsFrameDir()<< "\n";
+        // implicitely move to first selected frame
+        SDIFEntity::iterator it = readentity.begin();
+        ff=*it;
+        
+        ff.GetSignature(signature);
+        std::cerr << "read frame at time "<< ff.GetTime() << " Signature "<<signature<< "\n";    
+        
+        std::cerr << "frameDirectory still incomplete \n ";
+        readentity.PrintFrameDir();
+        
+        // request selected frame after time 0.
+        int ret=readentity.ReadNextSelectedFrame(ff,0.);
+        if(ret == 0) {
+          std::cerr << "frame at time 0 is not selected should not happen !!\n";
+        }
+        else{
+          ff.GetSignature(signature);
+          std::cerr << "read frame at time "<< ff.GetTime() << " Signature "<<signature<< "\n";
+          SDIFMatrix &mat = ff.GetMatrix(0);
+          
+          // read first column
+          std::vector<int> col;
+          mat.GetCol(col,0);
+          std::cerr << "1st column read as int\n";
+          for(int iii=0;iii<mat.GetNbRows(); ++iii)
+            std::cerr << "row "<< iii << " val " << col[iii] <<"\n";
+
+          // read first row
+          std::vector<double> row;
+          mat.GetRow(row,0);
+          std::cerr << "1st row read as double\n";
+          for(int iii=0;iii<mat.GetNbCols(); ++iii)
+            std::cerr << "col "<< iii << " val " << row[iii] <<"\n";
+	  
+        }
+        
+        std::cerr << "frameDirectory extended up to current frame \n ";
+        readentity.PrintFrameDir();
+        
+        // read once again
+        std::cerr << "try to read frame after time 0.5 \n";
+        ret=readentity.ReadNextSelectedFrame(ff,0.5);
+        if(ret == 0) {
+          std::cerr << "frame at time 0 is not selected should not happen !!\n";
+        }
+        else{
+          ff.GetSignature(signature);
+          std::cerr << "read frame at time "<< ff.GetTime() << " Signature "<<signature<< "\n";
+        }
+        
+        std::cerr << "try to increment frames after time 0.5 \n";
+        while(it!=readentity.end()){
+          it->Print();
+          ++it;
+        }
+        
+        --it;
+        while(it!=readentity.end()){
+          it->Print();
+          --it;
+        }
+        
+        
+        // read after end of file
+        std::cerr << "try to read after eof \n";
+      
+        if((ret=readentity.ReadNextSelectedFrame(ff,500))==0) {
+          std::cerr << "frame at time 500 is not selected  !! OK\n";
+        }
+        else {
+          std::cerr << "frame at time 500 is selected!! should not happen !!\n";
+        }
+      }
+      /* to catch an exception */
+      catch(SDIFEof& e)
+        {
+          /* if we want an access to the file */
+          const SdifFileT *sf = e.sdifFile();
+          std::cerr << " Catch EOF for file " <<sf->Name << " -- ending program " << std::endl;
+          std::cerr << "complete frameDirectory \n ";
+          readentity.PrintFrameDir();
+          /* to have the error message */
+        }
+      
+      catch(SDIFUnDefined& e)
+        {
+          std::cerr << " Catch Undefined " << std::endl;	
+          e.ErrorMessage();
+        }
+      
+      catch(Easdif::SDIFException&e)
+        {
+          std::cerr << " Catch other SDIFException " << std::endl;
+          e.ErrorMessage();
+        }
+      catch(std::exception &e)
+        {
+          std::cerr << " Catch other Exception: " << e.what() <<std::endl;          
+        }
+    }
+    else {
+      std::cerr << " cannot rewind a file that is not seekable"  <<std::endl;          
+    }
+    readentity.Close();
+    
+    /* deinitialise the SDIF library */
+    EasdifEnd();
+    return 0;
+}
+
+\endcode
+*
+* This example compiles with the command
+* 
+\code
+g++ -I@prefix@/include testeas.cpp -otesteas -L@prefix@/lib  -lEasdif
+\endcode
+*
+* provided you have stored the code under filename testeas.cpp. It will add 
+* two new name value tables and two new matrix types and a frame type
+* to the given input file and will select all 
+* 1HRM/1HRM and 1FOB/1FOF data and store the result in FileToWrite.sdif.
+*
+*/

@@ -1,0 +1,35 @@
+Version 1.4.7 2008-05-31  Axel Roebel 
+
+        * bug fixes :
+
+        - Fsdifopen returns proper frame directory info when matrix selection
+          is specified via file name.
+
+        - Fsdifloadfile/Fsdif_read_handler('loadfile') works properly with 
+          matrix seclections as well as with 5 return values.
+
+        - SDIFEntity::TestMatrixSelection and SDIFEntity::TestFrameSelection
+          work properly with low level selections.
+
+        - Fixed mex file generation on mac os for powerpc.
+
+Version 1.4.5 2008-04-07  Axel Roebel
+
+        * added support for cmake project configuration system (www.cmake.org)
+        supported operatings systems now include (Linux, MacOS X, Windows),
+        supported compilers include (gcc, MSVC, Intel)
+          (autotools are still available but will no longer be actively supported),
+
+        * first release with swig support,
+
+        * added support for matlab mex wrapper,       
+        
+        * added support for octave mex wrapper,
+
+        * improved support for MSVC, and intel compiler,
+
+        * add support for gcc visibility,
+        
+        * new interface for handling of MatrixTypes and FrameTypes, 
+
+        * more info available via the ChangeLog. 

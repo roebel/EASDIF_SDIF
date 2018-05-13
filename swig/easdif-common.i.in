@@ -1,0 +1,249 @@
+// $Id: easdif-common.i.in,v 1.21 2014-05-23 10:55:22 roebel Exp $ -*-c-*-
+//
+// easdif.i		16.04.2003		Diemo Schwarz
+//
+// Interface file for swig, defining the callable easdif functions
+//
+// $Log: not supported by cvs2svn $
+// Revision 1.20  2014/05/23 10:31:56  roebel
+// Use exception typemap to improve exception handling for
+// Matrix.Get/Set methods.
+//
+// Revision 1.19  2014/05/21 22:11:28  roebel
+// Added vector template for std::vector<MatrixType> and std::vector<FrameType> that are used y Entity::GetTypes functions.
+//
+// Revision 1.18  2014/04/10 21:34:07  roebel
+// More robust include file organisation.
+// Extended types of vector that are supported to read from matrices and vectors.
+//
+// Revision 1.17  2012/01/05 00:55:54  roebel
+// Provide access to FrameDirectory.
+//
+// Revision 1.16  2012/01/04 12:17:36  roebel
+// Removed all exception classes that are not very useful anyway.
+//
+// Revision 1.15  2012/01/03 23:56:35  roebel
+// Improve exception handling and add instantiation of template member functions for swig.
+// While swig generates warnings that if will ignore the overloads the template functions are notin fact not ignored.
+//
+// Revision 1.14  2006/11/27 16:49:45  roebel
+// Changed arguemnt mapping of SDIFMatrix::GetRow/GetCol functions.
+//
+// Revision 1.13  2006/11/26 22:53:39  roebel
+// Reput easdif source  directory.
+//
+// Revision 1.12  2006/11/26 16:35:40  roebel
+// Removed unnecessary extension.
+//
+// Revision 1.11  2006/11/26 16:17:01  roebel
+// Improved cross platform support by means of using automake more consistently.
+// Reorganized to work with swig 1.3.31!
+//
+// Revision 1.10  2006/10/17 10:36:45  roebel
+// Fixed out of source directory configuration and compilation.
+//
+// Revision 1.9  2006/10/17 10:10:41  roebel
+// Updated for new names of include files sdif_frame.hpp and sdif_matrix.hpp.
+//
+// Revision 1.8  2005/07/25 13:29:25  roebel
+// Adapted for new include file names - h->hpp.
+//
+// Revision 1.7  2003/08/07 16:19:29  roebel
+// Java include directories are determined automatically using m4 functions. perl include directory are determined with improved flexibility.
+//
+// Revision 1.6  2003/06/05 11:15:09  roebel
+// Moved stlmap conditional to easdif-common.i.in
+//
+// Revision 1.5  2003/05/28 16:57:02  roebel
+// Made configure switching map support according tothe swig version installed.
+//
+// Revision 1.4  2003/05/22 21:20:22  roebel
+// Added support for SDIFNameValueTables and std::map.
+//
+// Revision 1.3  2003/05/21 20:33:59  roebel
+// Added exception handling to swig interface.
+//
+// Revision 1.2  2003/05/19 14:04:20  roebel
+// To resolve problems with inconsistent nameing in interface files
+// and header files, swig rename declarations have been changed to use
+// %rename instead of %name and have been moved to swig interface description.
+// Due to bug in swig const version of GetMatrixWithSig had to be ignored.
+//
+// Revision 1.1  2003/04/30 11:34:31  tisseran
+// Removee file no conform with Diemo's file hierarchy
+// Started autoconfiscation of swig directory
+//
+// Revision 1.10  2003/04/29 16:28:48  schwarz
+// Use SWIG_RENAME_EASDIF to control class renaming.
+//
+// Revision 1.9  2003/04/29 15:20:38  schwarz
+// take care of ambiguous definitions (because of swig bug)
+//
+// Revision 1.8  2003/04/18 17:45:23  schwarz
+// Renamed sdifsignature.i to sdiftypemap.i, because all types are in there.
+// Include typemap for std::string from SWIG library
+// Added typemap freearg SdifStringT *
+//
+// Revision 1.7  2003/04/18 15:41:18  schwarz
+// Don't include all definitions from sdif.h, only the ones needed by
+// easdif, defined in sdifdefine.i.  -> smaller wrapper size:
+// .cxx	 880k -> 130k
+// .o	1000k -> 210k
+// .pm	 123k -> 8k
+//
+// Revision 1.6  2003/04/18 14:31:27  schwarz
+// Added typemap for string to SdifSignature conversion (input arg):
+// Setting/writing data works --> wrapper complete, but rudimentary.
+//
+// Revision 1.5  2003/04/17 12:20:39  schwarz
+// Output (return value) mapping for SdifSignature works!
+//
+// Revision 1.4  2003/04/17 11:15:01  schwarz
+// Swigging sdif.h works (with some warnings), but that's not yet it...
+//
+// Revision 1.3  2003/04/17 11:03:52  schwarz
+// Swigged all easdif classes!
+// Now going on to map sdif basic types.
+//
+// Revision 1.2  2003/04/17 10:19:51  schwarz
+// Nice class and method names using renaming.
+//
+// Revision 1.1  2003/04/17 09:51:10  schwarz
+// First working swig generated perl extension!
+// Classes re-declared in easdif.i, simple method without shadow classes.
+// Doesn't do much except counting frames.
+
+
+
+// include header to make wrapper compile
+%{
+
+#include "easdif/easdif.h"
+
+using namespace Easdif;
+
+%}
+
+
+%include stl.i
+
+// for name value table
+%template(stringmap) std::map<std::string,std::string>;
+
+// For SDIFDirectory Entity::GetDirectory.
+%template(Directory) std::list<Easdif::SDIFLocation>;
+
+
+// change SWIG class names because we prefix with eaSDIF:: anyway
+%rename(Frame)          Easdif::SDIFFrame;
+%rename(Entity)         Easdif::SDIFEntity;
+%rename(Matrix)         Easdif::SDIFMatrix;
+%rename(NameValueTable) Easdif::SDIFNameValueTable;
+
+
+// would have to zap other constructors, if not, SdifSignature is invisible...
+//%ignore SDIFMatrix(const SdifDataTypeET);
+//%ignore SDIFMatrix(const SDIFMatrix&);
+
+
+
+// have to ignore constructor, because SdifSignature and
+// SdifDataTypeET are indistinguishably int for swig
+%ignore Easdif::SDIFMatrix::SDIFMatrix(SdifSignature, int, int, SdifDataTypeET);
+%ignore Easdif::SDIFMatrix::operator=(const SDIFMatrix&);
+// have to be ignrored due to bug in swig that does not handle
+// correctly the typemap for SdifSignature when resolving overloaded
+// functions (here const qualifier)
+%ignore Easdif::SDIFFrame::GetMatrixWithSig(const SdifSignature) const;
+
+// cannot be used (returns a void *)
+%ignore GetData;
+
+// if this is given then the
+// Easdif::SDIFMatrix::GetRow(std::vector,int) and
+// Easdif::SDIFMatrix::GetCol(std::vector,int) functions
+// take only one argument and provide the standard vector as
+// result!
+// to improve consistency with c++ this is not given here.
+//
+// %apply std::vector<double>& OUTPUT {std::vector<double>&out}
+//
+
+// read all class definitions
+#define SWIG_RENAME_EASDIF
+
+
+%typemap(throws) SDIFArrayPosition  %{
+  SWIG_exception(SWIG_IndexError, $1.getmessage().c_str());
+  SWIG_fail;
+%}
+
+%typemap(throws) SDIFMatrixDataError  %{
+  SWIG_exception(SWIG_ValueError, $1.getmessage().c_str());
+  SWIG_fail;
+%}
+
+%typemap(throws) SDIFMatrixNotAvailable  %{
+  SWIG_exception(SWIG_IndexError, $1.getmessage().c_str());
+  SWIG_fail;
+%}
+
+%include "@EASDIF_INC_DIR_FOR_SWIG@/easdif/sdif_matrix.hpp"
+%include "@EASDIF_INC_DIR_FOR_SWIG@/easdif/sdifnamevaluetable.hpp"
+%include "@EASDIF_INC_DIR_FOR_SWIG@/easdif/sdif_frame.hpp"
+%include "@EASDIF_INC_DIR_FOR_SWIG@/easdif/sdifentity.hpp"
+
+%template(GetRow) Easdif::SDIFMatrix::GetRow<double>;
+%template(GetRow) Easdif::SDIFMatrix::GetRow<float>;
+%template(GetRow) Easdif::SDIFMatrix::GetRow<char>;
+%template(GetRow) Easdif::SDIFMatrix::GetRow<short>;
+%template(GetRow) Easdif::SDIFMatrix::GetRow<int>;
+%template(GetRow) Easdif::SDIFMatrix::GetRow<unsigned char>;
+%template(GetRow) Easdif::SDIFMatrix::GetRow<unsigned short>;
+%template(GetRow) Easdif::SDIFMatrix::GetRow<unsigned int>;
+
+%template(GetCol) Easdif::SDIFMatrix::GetCol<double>;
+%template(GetCol) Easdif::SDIFMatrix::GetCol<float>;
+%template(GetCol) Easdif::SDIFMatrix::GetCol<char>;
+%template(GetCol) Easdif::SDIFMatrix::GetCol<short>;
+%template(GetCol) Easdif::SDIFMatrix::GetCol<int>;
+%template(GetCol) Easdif::SDIFMatrix::GetCol<unsigned char>;
+%template(GetCol) Easdif::SDIFMatrix::GetCol<unsigned short>;
+%template(GetCol) Easdif::SDIFMatrix::GetCol<unsigned int>;   
+
+%template(SetRow) Easdif::SDIFMatrix::SetRow<double>;
+%template(SetRow) Easdif::SDIFMatrix::SetRow<float>;
+%template(SetRow) Easdif::SDIFMatrix::SetRow<char>;
+%template(SetRow) Easdif::SDIFMatrix::SetRow<short>;
+%template(SetRow) Easdif::SDIFMatrix::SetRow<int>;
+%template(SetRow) Easdif::SDIFMatrix::SetRow<unsigned char>;
+%template(SetRow) Easdif::SDIFMatrix::SetRow<unsigned short>;
+%template(SetRow) Easdif::SDIFMatrix::SetRow<unsigned int>;
+
+%template(SetCol) Easdif::SDIFMatrix::SetCol<double>;
+%template(SetCol) Easdif::SDIFMatrix::SetCol<float>;
+%template(SetCol) Easdif::SDIFMatrix::SetCol<char>;
+%template(SetCol) Easdif::SDIFMatrix::SetCol<short>;
+%template(SetCol) Easdif::SDIFMatrix::SetCol<int>;
+%template(SetCol) Easdif::SDIFMatrix::SetCol<unsigned char>;
+%template(SetCol) Easdif::SDIFMatrix::SetCol<unsigned short>;
+%template(SetCol) Easdif::SDIFMatrix::SetCol<unsigned int>;
+
+// filter all exceptions and transform into Target exceptions preserving the error message 
+%exception {
+        try {
+                $action
+        } catch(const SDIFException& e) {
+                SWIG_exception(SWIG_RuntimeError,e.getmessage().c_str());
+        } catch(const std::exception& e) {
+                SWIG_exception(SWIG_SystemError, e.what());
+        } catch(...) {
+                SWIG_exception(SWIG_UnknownError,"Unknown exception");
+        }
+}
+
+
+namespace std {
+  %template(MatrixTypeVector) vector<Easdif::MatrixType>;
+  %template(FrameTypeVector) vector<Easdif::FrameType>;
+}
