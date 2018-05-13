@@ -1,5 +1,4 @@
 # Disclaimer
-==============
 
 This github repos is a manually managed mirror  providing access to the EASDIF_SDIF directory of the SourceForge 
 SDIF repos.
@@ -9,7 +8,6 @@ SDIF repos.
 Here below follows the original readme of the Easdif project:
 
 # Introduction
-==============
 
 Easdif is a  high level API to the functions of  the SDIF Library.  By
 means  of encapsulating  all  low level  functions  into classes  with
@@ -35,7 +33,6 @@ directory ESDIF_SDIF should  be used as source root  directory for the
 cmake configuration (see below) and the build.
 
 # Installation and compilation
-==============================
 
 Since  version 1.3.0  of Easdif  the main  build  system configuration
 system is based on cmake (see: www.cmake.org). cmake is similar to the
@@ -67,8 +64,7 @@ $> make
 $> make install
 
 
-# Mac OS X
-----------
+## Mac OS X
 
 For installation on  Mac OS X you can use the  same procedure as above
 or you  can use Xcode.  To configure your  Xcode project you  create a
@@ -96,8 +92,7 @@ target you want to build and  select build from there.  Note, that you
 should never  use the ALL  target because not  all of the  targets are
 supported in Xcode.
 
-# Windows 
----------
+## Windows 
 
 To  configure and  compile  on window  you  can use  all the  compiler
 environments supported  by cmake (mingw, cygwin, msvc  and many more).
@@ -114,7 +109,6 @@ environment. Therefore you better work with the individual library and
 program targets. 
 
 # Matlab/Octave mex interface
-==============================
 
 Since  1.4.0  of the  library  a matlab  mex  interface  to easdif  is
 available.   Building  mex files  will  work  for  command line  build
@@ -187,8 +181,7 @@ $> make install
 Mex wrappers and m-files  will be installed in 
 ${CMAKE_INSTALL_PREFIX}/lib/matlab.
 
-# Configuring the Matlab Mex interface for Mac OS 10.6
------------------------------------------------------
+## Configuring the Matlab Mex interface for Mac OS 10.6
 
 You need to configure Easdif  according to the matlab version you use.
 The choices that  exist are related to the  architecture, the compiler
@@ -213,7 +206,7 @@ compiler  before running  the cmake  command.  Please  note,  that you
 cannot change the compiler for a configured build directory.
 
 # SWIG Wrappers
-===============
+
 
 Easdif provides a number of swig wrapper templates that can be used to
 work  with  SDIF  files  from   python,  perl  or  java.  For  further
@@ -221,7 +214,6 @@ information look into swig/README.
 
 
 # Documentation
-===============
 
 The  programmer documentation  of  the Easdif  library  can either  be
 downloaded from http://sourceforge.net/projects/sdif  or if doxygen is
@@ -233,14 +225,12 @@ in a configured source directory.
 
 
 # License Agreement
-===================
 
 Easdif and  SDIF are free  software, distributed under the  GNU Lesser
 General Public License. See the file COPYING for further information.
 
 
 # Contact
-=========
 
 SDIF home page: http://sdif.sourceforge.net/
 SDIF wiki http://sdif.wiki.sourceforge.net/
