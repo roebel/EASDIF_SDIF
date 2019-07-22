@@ -104,6 +104,15 @@ TESTS_ENVIRONMENT = SDIFTYPES=$(SDIFTYPES) $(SHELL)
 TESTS = test_conv2  test_Header test_NVT cmd_testcheck
 
 
+#
+# run with valgrind (leak check only reports system level leaks in dylib loading)
+#
+
+grind:
+	SDIFTYPES=$(SDIFTYPES) ./test_conv -p "valgrind --leak-check=no --track-origins=yes --error-limit=no"
+	SDIFTYPES=$(SDIFTYPES) ./test_conv2 -p "valgrind --leak-check=no --track-origins=yes --error-limit=no"
+	SDIFTYPES=$(SDIFTYPES) ./cmd_testcheck -p "valgrind --leak-check=no --track-origins=yes --error-limit=no"
+	$(MAKE) prof=valgrind PROFSUFFIX= prof
 
 #
 # profiling targets
@@ -143,7 +152,8 @@ prof_tosdif_a01		= tosdif
 parg_tosdif_a01		= -t $(SDIFTYPES) -i /tmp/$(proffile).txt -o /tmp/$(proffile).txt.sdif
 
 
-PROFEXE		  = ../tools/$(prof_$*)-profile
+PROFSUFFIX	  = -profile
+PROFEXE		  = ../tools/$(prof_$*)$(PROFSUFFIX)
 PROFTAG		  = prof/$*-$(VERSION)$(descr)
 
 prof: prof_sdifextractfrm_a01 prof_sdifextractmtx_a01 prof_sdifextractall_a01 \

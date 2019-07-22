@@ -292,7 +292,7 @@ public:
    */
 
   template <class TT>
-  void _GetRow(TT* out,int irow) const throw (SDIFArrayPosition) 
+  void _GetRow(TT* out,int irow) const 
   {
     if (irow<0 || irow >= m_Nrows || m_Data.empty())      {
       throw SDIFArrayPosition(eError,
@@ -317,7 +317,7 @@ public:
    * 
    */
   template <class TT>
-  void _GetCol(TT* out,int icol) const throw (SDIFArrayPosition) 
+  void _GetCol(TT* out,int icol) const 
   {
     if (icol<0 || icol >= m_Ncols || m_Data.empty())      {
       throw SDIFArrayPosition(eError,
@@ -341,7 +341,7 @@ public:
    * @param icol column index [0,m_Ncols[
    * 
    */
-  void GetCol(double* out,int icol) const throw (SDIFArrayPosition){
+  void GetCol(double* out,int icol) const{
     _GetCol(out,icol);
     return;
   }
@@ -354,7 +354,7 @@ public:
    * @param icol column index [0,m_Ncols[
    * 
    */
-  void GetCol(float* out,int icol) const throw (SDIFArrayPosition){
+  void GetCol(float* out,int icol) const{
     _GetCol(out,icol);
     return;
   }
@@ -367,7 +367,7 @@ public:
    * @param icol column index [0,m_Ncols[
    * 
    */
-  void GetCol(SdifInt4* out,int icol) const throw (SDIFArrayPosition){
+  void GetCol(SdifInt4* out,int icol) const{
     _GetCol(out,icol);
     return;
   }
@@ -380,7 +380,7 @@ public:
    * @param icol column index [0,m_Ncols[
    * 
    */
-  void GetCol(SdifUInt4* out,int icol) const throw (SDIFArrayPosition){
+  void GetCol(SdifUInt4* out,int icol) const{
     _GetCol(out,icol);
     return;
   }
@@ -393,7 +393,7 @@ public:
    * @param icol column index [0,m_Ncols[
    * 
    */
-  void GetCol(SdifInt2* out,int icol) const throw (SDIFArrayPosition){
+  void GetCol(SdifInt2* out,int icol) const{
     _GetCol(out,icol);
     return;
   }
@@ -405,7 +405,7 @@ public:
    * @param icol column index [0,m_Ncols[
    * 
    */
-  void GetCol(SdifUInt2* out,int icol) const throw (SDIFArrayPosition){
+  void GetCol(SdifUInt2* out,int icol) const{
     _GetCol(out,icol);
     return;
   }
@@ -418,7 +418,7 @@ public:
    * @param icol column index [0,m_Ncols[
    * 
    */
-  void GetCol(SdifInt1* out,int icol) const throw (SDIFArrayPosition){
+  void GetCol(SdifInt1* out,int icol) const{
     _GetCol(out,icol);
     return;
   }
@@ -430,7 +430,7 @@ public:
    * @param icol column index [0,m_Ncols[
    * 
    */
-  void GetCol(SdifUInt1* out,int icol) const throw (SDIFArrayPosition){
+  void GetCol(SdifUInt1* out,int icol) const{
     _GetCol(out,icol);
     return;
   }
@@ -444,7 +444,7 @@ public:
    * @param irow row index [0,m_Nrows[
    * 
    */
-  void GetRow(double* out,int irow) const throw (SDIFArrayPosition){
+  void GetRow(double* out,int irow) const{
     _GetRow(out,irow);
     return;
   }
@@ -457,7 +457,7 @@ public:
    * @param irow row index [0,m_Nrows[
    * 
    */
-  void GetRow(float* out,int irow) const throw (SDIFArrayPosition){
+  void GetRow(float* out,int irow) const{
     _GetRow(out,irow);
     return;
   }
@@ -470,7 +470,7 @@ public:
    * @param irow row index [0,m_Nrows[
    * 
    */
-  void GetRow(SdifInt4 * out,int irow) const throw (SDIFArrayPosition){
+  void GetRow(SdifInt4 * out,int irow) const{
     _GetRow(out,irow);
     return;
   }
@@ -483,7 +483,7 @@ public:
    * @param irow row index [0,m_Nrows[
    * 
    */
-  void GetRow(SdifUInt4* out,int irow) const throw (SDIFArrayPosition){
+  void GetRow(SdifUInt4* out,int irow) const{
     _GetRow(out,irow);
     return;
   }
@@ -496,7 +496,7 @@ public:
    * @param irow row index [0,m_Nrows[
    * 
    */
-  void GetRow(SdifInt2* out,int irow) const throw (SDIFArrayPosition){
+  void GetRow(SdifInt2* out,int irow) const{
     _GetRow(out,irow);
     return;
   }
@@ -508,7 +508,7 @@ public:
    * @param irow row index [0,m_Nrows[
    * 
    */
-  void GetRow(SdifUInt2* out,int irow) const throw (SDIFArrayPosition){
+  void GetRow(SdifUInt2* out,int irow) const{
     _GetRow(out,irow);
     return;
   }
@@ -521,7 +521,7 @@ public:
    * @param irow row index [0,m_Nrows[
    * 
    */
-  void GetRow(SdifInt1* out,int irow) const throw (SDIFArrayPosition){
+  void GetRow(SdifInt1* out,int irow) const{
     _GetRow(out,irow);
     return;
   }
@@ -534,7 +534,7 @@ public:
    * @param irow row index [0,m_Nrows[
    * 
    */
-  void GetRow(SdifUInt1* out,int irow) const throw (SDIFArrayPosition){
+  void GetRow(SdifUInt1* out,int irow) const{
     _GetRow(out,irow);
     return;
   }
@@ -924,7 +924,7 @@ public:
    */
 
   template <class TT>
-  void _SetRow(const TT* in,int irow)  throw (SDIFArrayPosition) 
+  void _SetRow(const TT* in,int irow)  
   {
     if (irow<0 || irow >= m_Nrows || m_Data.empty())      {
       throw SDIFArrayPosition(eError,
@@ -949,7 +949,7 @@ public:
    * 
    */
   template <class TT>
-  void _SetCol(const TT* in,int icol)  throw (SDIFArrayPosition) 
+  void _SetCol(const TT* in,int icol)  
   {
     if (icol<0 || icol >= m_Ncols || m_Data.empty())      {
       throw SDIFArrayPosition(eError,
@@ -973,7 +973,7 @@ public:
    * @param icol column index [0,m_Ncols[
    * 
    */
-  void SetCol(const double* out,int icol)  throw (SDIFArrayPosition){
+  void SetCol(const double* out,int icol) {
     _SetCol(out,icol);
     return;
   }
@@ -986,7 +986,7 @@ public:
    * @param icol column index [0,m_Ncols[
    * 
    */
-  void SetCol(const float* out,int icol)  throw (SDIFArrayPosition){
+  void SetCol(const float* out,int icol) {
     _SetCol(out,icol);
     return;
   }
@@ -999,7 +999,7 @@ public:
    * @param icol column index [0,m_Ncols[
    * 
    */
-  void SetCol(const SdifInt4* out,int icol)  throw (SDIFArrayPosition){
+  void SetCol(const SdifInt4* out,int icol) {
     _SetCol(out,icol);
     return;
   }
@@ -1011,7 +1011,7 @@ public:
    * @param icol column index [0,m_Ncols[
    * 
    */
-  void SetCol(const SdifUInt4* out,int icol)  throw (SDIFArrayPosition){
+  void SetCol(const SdifUInt4* out,int icol) {
     _SetCol(out,icol);
     return;
   }
@@ -1024,7 +1024,7 @@ public:
    * @param icol column index [0,m_Ncols[
    * 
    */
-  void SetCol(const SdifInt2* out,int icol)  throw (SDIFArrayPosition){
+  void SetCol(const SdifInt2* out,int icol) {
     _SetCol(out,icol);
     return;
   }
@@ -1036,7 +1036,7 @@ public:
    * @param icol column index [0,m_Ncols[
    * 
    */
-  void SetCol(const SdifUInt2* out,int icol)  throw (SDIFArrayPosition){
+  void SetCol(const SdifUInt2* out,int icol) {
     _SetCol(out,icol);
     return;
   }
@@ -1049,7 +1049,7 @@ public:
    * @param icol column index [0,m_Ncols[
    * 
    */
-  void SetCol(const SdifInt1* out,int icol)  throw (SDIFArrayPosition){
+  void SetCol(const SdifInt1* out,int icol) {
     _SetCol(out,icol);
     return;
   }
@@ -1062,7 +1062,7 @@ public:
    * @param icol column index [0,m_Ncols[
    * 
    */
-  void SetCol(const SdifUInt1* out,int icol)  throw (SDIFArrayPosition){
+  void SetCol(const SdifUInt1* out,int icol) {
     _SetCol(out,icol);
     return;
   }
@@ -1076,7 +1076,7 @@ public:
    * @param irow row index [0,m_Nrows[
    * 
    */
-  void SetRow(const double* out,int irow)  throw (SDIFArrayPosition){
+  void SetRow(const double* out,int irow) {
     _SetRow(out,irow);
     return;
   }
@@ -1089,7 +1089,7 @@ public:
    * @param irow row index [0,m_Nrows[
    * 
    */
-  void SetRow(const float* out,int irow)  throw (SDIFArrayPosition){
+  void SetRow(const float* out,int irow) {
     _SetRow(out,irow);
     return;
   }
@@ -1102,7 +1102,7 @@ public:
    * @param irow row index [0,m_Nrows[
    * 
    */
-  void SetRow(const SdifInt4* out,int irow)  throw (SDIFArrayPosition){
+  void SetRow(const SdifInt4* out,int irow) {
     _SetRow(out,irow);
     return;
   }
@@ -1114,7 +1114,7 @@ public:
    * @param irow row index [0,m_Nrows[
    * 
    */
-  void SetRow(const SdifUInt4* out,int irow)  throw (SDIFArrayPosition){
+  void SetRow(const SdifUInt4* out,int irow) {
     _SetRow(out,irow);
     return;
   }
@@ -1126,7 +1126,7 @@ public:
    * @param irow row index [0,m_Nrows[
    * 
    */
-  void SetRow(const SdifInt2* out,int irow)  throw (SDIFArrayPosition){
+  void SetRow(const SdifInt2* out,int irow) {
     _SetRow(out,irow);
     return;
   }
@@ -1138,7 +1138,7 @@ public:
    * @param irow row index [0,m_Nrows[
    * 
    */
-  void SetRow(const SdifUInt2* out,int irow)  throw (SDIFArrayPosition){
+  void SetRow(const SdifUInt2* out,int irow) {
     _SetRow(out,irow);
     return;
   }
@@ -1151,7 +1151,7 @@ public:
    * @param irow row index [0,m_Nrows[
    * 
    */
-  void SetRow(const SdifInt1* out,int irow)  throw (SDIFArrayPosition){
+  void SetRow(const SdifInt1* out,int irow) {
     _SetRow(out,irow);
     return;
   }
@@ -1163,7 +1163,7 @@ public:
    * @param irow row index [0,m_Nrows[
    * 
    */
-  void SetRow(const SdifUInt1* out,int irow)  throw (SDIFArrayPosition){
+  void SetRow(const SdifUInt1* out,int irow) {
     _SetRow(out,irow);
     return;
   }

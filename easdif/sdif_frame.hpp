@@ -412,8 +412,8 @@ namespace Easdif {
      *
      * @return SDIFMatrix number i
      */
-    SDIFMatrix& GetMatrix(unsigned int index) throw(Easdif::SDIFMatrixNotAvailable);
-    const SDIFMatrix& GetMatrix(unsigned int index) const throw(Easdif::SDIFMatrixNotAvailable);
+    SDIFMatrix& GetMatrix(unsigned int index) ;
+    const SDIFMatrix& GetMatrix(unsigned int index) const ;
 
 
     /** 
@@ -421,10 +421,10 @@ namespace Easdif {
      * get the matrix of SdifSignature : sig in the vector of matrix
      * @return SDIFMatrix
      */
-    SDIFMatrix& GetMatrixWithSig(const SdifSignature sig) throw(SDIFMatrixNotAvailable);/*ambiguity 
+    SDIFMatrix& GetMatrixWithSig(const SdifSignature sig) ;/*ambiguity 
                                                                                           between signature and int
                                                                                           -> other name : GetMatrixwithSig()*/
-    const SDIFMatrix& GetMatrixWithSig(const SdifSignature sig) const throw(SDIFMatrixNotAvailable);
+    const SDIFMatrix& GetMatrixWithSig(const SdifSignature sig) const ;
 
     /**
      * \ingroup mat 
@@ -432,8 +432,8 @@ namespace Easdif {
      * @param signature string
      * @return SDIFMatrix
      */
-    SDIFMatrix& GetMatrix(const std::string& signature) throw(SDIFMatrixNotAvailable);
-    const SDIFMatrix& GetMatrix(const std::string& signature) const throw(SDIFMatrixNotAvailable);
+    SDIFMatrix& GetMatrix(const std::string& signature) ;
+    const SDIFMatrix& GetMatrix(const std::string& signature) const ;
 
 
     /** 

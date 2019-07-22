@@ -20,6 +20,14 @@ if [ "$SDIFTOTEXT" = "" -o "$TOSDIF" = "" ]; then
   exit 1
 fi
 
+# prefix for exes
+if [ "$1" == -p ]; then
+    shift
+    SDIFTOTEXT="$1 $SDIFTOTEXT"
+    TOSDIF="$1 $TOSDIF"
+    shift
+fi
+
 
 Files_Txt_Dir=$srcdir/files/txt
 Files_Sdif_Dir=./files/sdif
@@ -41,7 +49,7 @@ for namein in $Files_Txt_Dir/*.txt; do
     echo
     if [ "$base" = "t.txt" -o "$base" = "t2.txt" ];then
        echo \***********************************************************
-       echo "****   BEWARE : $base itentionally produces an Error "
+       echo "****   BEWARE : $base intentionally produces an Error "
        echo \***********************************************************
        echo 
     fi

@@ -230,7 +230,6 @@ SDIFMatrix & SDIFMatrix::operator=(const SDIFMatrix& aMatrix) {
 
 
 void SDIFMatrix::Init(SdifSignature sig, int nrows, int ncols, SdifDataTypeET type)
-  throw(SDIFMatrixDataError,std::bad_alloc)
 {
     if(mInter) {
       if(mType == type) {
@@ -283,8 +282,7 @@ void SDIFMatrix::Init(SdifSignature sig, int nrows, int ncols, SdifDataTypeET ty
 }
 
 
-void SDIFMatrix::Init(const std::string &sig, int nrows, int ncols, SdifDataTypeET type)
-  throw(SDIFMatrixDataError,std::bad_alloc){
+void SDIFMatrix::Init(const std::string &sig, int nrows, int ncols, SdifDataTypeET type){
     Init(SdifStringToSignature(sig.c_str()), nrows, ncols, type);
 }
 

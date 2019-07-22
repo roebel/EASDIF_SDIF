@@ -30,6 +30,15 @@ if [ "$SDIFTOTEXT" = "" -o "$TOSDIF" = "" ]; then
 fi
 
 
+# prefix for exes
+if [ "$1" == -p ]; then
+    shift
+    SDIFTOTEXT="$1 $SDIFTOTEXT"
+    TOSDIF="$1 $TOSDIF"
+    shift
+fi
+
+
 # Inputs
 Files_Txt_Dir=$srcdir/files/txt
 Files_Sdif_Dir=$srcdir/files/sdifref

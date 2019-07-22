@@ -1,3 +1,41 @@
+2019-07-16 14:49  roebel
+Version 1.4.27
+
+	* easdif/sdif_frame.cpp, easdif/sdif_frame.hpp, easdif/sdif_matrix.cpp,
+	* easdif/sdif_matrix.hpp, easdif/sdifentity.hpp, easdif/sdifexception.cpp,
+	* easdif/sdifexception.hpp, easdif/sdifmatrixdata.hpp [r1838]:
+	Removed all exception specifications that are deprecated in C++11
+	and errors in C++17.
+
+2018-05-13 10:30  roebel
+
+	* README [r1832]:
+	Fixed documentation to reflect that repos is now subversion
+
+2018-01-21 14:51  roebel
+Version 1.4.26
+
+	* CMakeLists.txt, swig/python/easdif-python.i [r1829]:
+	Extended  python interface  to include  handing of
+	ReadPrevSelectedFrame with proper handling of exceptions.
+
+2018-01-21 11:03  roebel
+
+	* . [r1828]:
+	added SDIF as external to  reproduce EASDIF_SDIF module alias from
+	CVS, to  checkout only Easdif  (old CVS Easdif module)  please use
+	svn checkout --ignore-externals
+
+2017-03-20 21:35  roebel
+
+	* swig/python/CMakeLists.txt [r1827]:
+	Give proper error message if numpy is not available.
+
+2017-03-16 19:46  roebel
+
+	* swig/python/sdiftypemap-python.i [r1826]:
+	Removed remaining debug output.
+
 2017-03-15  Axel Roebel  <roebel@m2336.local>
 Version 1.4.25
 

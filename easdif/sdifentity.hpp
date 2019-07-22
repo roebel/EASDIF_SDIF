@@ -2399,7 +2399,7 @@ public:
      *
      *  \return true if position has been achieved
      */
-    bool GotoPos() const throw(SDIFSeekError)  {
+    bool GotoPos() const  {
       SdiffPosT pos = mBase->LocPos();
       mpEnt->mNextDirPos   = mBase;
       mpEnt->mEof   = false;

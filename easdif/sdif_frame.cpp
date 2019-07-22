@@ -444,7 +444,6 @@ void SDIFFrame::SetTime(SdifFloat8 time)
 
 /* to Get */
 SDIFMatrix& SDIFFrame::GetMatrix(unsigned int index)   
-  throw(SDIFMatrixNotAvailable)
 {
     // Check index
     if (index > (mv_Matrix.size()-1))
@@ -468,9 +467,7 @@ SDIFMatrix& SDIFFrame::GetMatrix(unsigned int index)
 }
 
 /* to Get */
-const SDIFMatrix& SDIFFrame::GetMatrix(unsigned int index) const  
-  throw(SDIFMatrixNotAvailable)
-
+const SDIFMatrix& SDIFFrame::GetMatrix(unsigned int index) const 
 {
     // Check index
     if (index > (mv_Matrix.size()-1))
@@ -575,7 +572,6 @@ bool SDIFFrame::MatrixExists(const std::string& signature) const
 
 
 SDIFMatrix& SDIFFrame::GetMatrixWithSig(const SdifSignature sig)
-  throw(SDIFMatrixNotAvailable)
 {
     bool test = false;    
     SdifUInt4 index = 0;
@@ -599,7 +595,6 @@ SDIFMatrix& SDIFFrame::GetMatrixWithSig(const SdifSignature sig)
 }
 
 const SDIFMatrix& SDIFFrame::GetMatrixWithSig(const SdifSignature sig) const
-  throw(SDIFMatrixNotAvailable)
 {
     bool test = false;    
     SdifUInt4 index = 0;
@@ -625,7 +620,6 @@ const SDIFMatrix& SDIFFrame::GetMatrixWithSig(const SdifSignature sig) const
 
 
 SDIFMatrix& SDIFFrame::GetMatrix(const std::string& signature)
-  throw(SDIFMatrixNotAvailable)
 {   
     /*
       bool test = false;    
@@ -647,7 +641,6 @@ SDIFMatrix& SDIFFrame::GetMatrix(const std::string& signature)
 
 
 const SDIFMatrix& SDIFFrame::GetMatrix(const std::string& signature) const
-  throw(SDIFMatrixNotAvailable)
 {   
     /*
       bool test = false;    

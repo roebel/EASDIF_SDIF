@@ -30,6 +30,18 @@ if [ "$QUERYPROG" = "" ]; then
 fi
 fi
 
+if [ "$TESTCHECK" = "" ];then
+    TESTCHECK=./testcheck
+fi
+
+# prefix for exes
+if [ "$1" == -p ]; then
+    shift
+    QUERYPROG="$1 $QUERYPROG"
+    TESTCHECK="$1 $TESTCHECK"
+    shift
+fi
+
 echo Running $QUERYPROG ${FILE}:
 echo
 
@@ -40,10 +52,6 @@ if [ $err -ne 0 ] ; then
   exit 1;
 fi
   
-if [ "$TESTCHECK" = "" ];then
-    TESTCHECK=./testcheck
-fi
-
 echo
 echo Waiting for output: Found 1REB frame, index 0.
 "${TESTCHECK}" $FILE 1REB

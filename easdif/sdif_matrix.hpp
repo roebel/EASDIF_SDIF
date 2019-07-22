@@ -404,8 +404,7 @@ namespace Easdif {
      * @param type   SDIFDataType = type of internal representation of the matrix
      */
     void Init(SdifSignature sig, 
-	      int nrows, int ncols, SdifDataTypeET  type)   
-      throw(SDIFMatrixDataError,std::bad_alloc);
+	      int nrows, int ncols, SdifDataTypeET  type);
 
     /** 
      * \ingroup create
@@ -417,9 +416,7 @@ namespace Easdif {
      * @param type   SDIFDataType = type of internal representation of the matrix
      */
     void Init(const std::string &sig, 
-	      int nrows, int ncols, SdifDataTypeET  type)
-      throw(SDIFMatrixDataError,std::bad_alloc);
-
+	      int nrows, int ncols, SdifDataTypeET  type);
 
     /** 
      * \ingroup create
@@ -543,7 +540,7 @@ namespace Easdif {
      * 
      * @return the value
      */
-    int GetUChar(int i, int j) const throw (SDIFArrayPosition){
+    int GetUChar(int i, int j) const{
       return mInter->GetUChar(i, j);};
 
     /**
@@ -554,7 +551,7 @@ namespace Easdif {
      * 
      * @return the value
      */
-    int GetInt(int i, int j) const throw (SDIFArrayPosition){
+    int GetInt(int i, int j) const {
       return mInter->GetInt(i, j);};
 
 
@@ -566,7 +563,7 @@ namespace Easdif {
      * 
      * @return the value
      */
-    float GetFloat(int i, int j)const throw (SDIFArrayPosition){ 
+    float GetFloat(int i, int j)const{ 
       return mInter->GetFloat(i, j);}
 
     /**
@@ -578,7 +575,7 @@ namespace Easdif {
      * 
      * @return the value
      */
-    double GetDouble(int i, int j) const throw (SDIFArrayPosition) {
+    double GetDouble(int i, int j) const {
       return mInter->GetDouble(i, j);}
 
 
@@ -592,19 +589,19 @@ namespace Easdif {
      * 
      */
     template<typename Tout>
-    void Get(int i, int j, Tout& value) const throw (SDIFArrayPosition)
+    void Get(int i, int j, Tout& value) const
     {
       value = static_cast<Tout>(mInter->GetDouble(i, j));
     }
 
     // specialization for float that does not use cast
-    void Get(int i, int j, float& value) const throw (SDIFArrayPosition)
+    void Get(int i, int j, float& value) const 
     {
       value = mInter->GetFloat(i, j);
     }
   
     // specialization for int that does not use cast
-    void Get(int i, int j, int& value)  const throw (SDIFArrayPosition)
+    void Get(int i, int j, int& value)  const 
     {
       value = mInter->GetInt(i, j);
     }
@@ -612,7 +609,7 @@ namespace Easdif {
 
 
     // std::string Get() ??? exception when not string matrix?
-    void Get(std::string& value)  const throw(SDIFMatrixDataError)
+    void Get(std::string& value)  const 
     {
 
       if (mType != eText)
@@ -640,7 +637,7 @@ namespace Easdif {
      */
 
     template <class TT>
-    void GetRow(TT* out,int irow) const throw (SDIFArrayPosition) {
+    void GetRow(TT* out,int irow) const  {
       mInter->GetRow(out,irow);
       return;
     }
@@ -655,7 +652,7 @@ namespace Easdif {
      */
     template<class VEC_REAL>
     void
-    GetRow(std::vector<VEC_REAL> &out,int irow) const throw (SDIFArrayPosition) {
+    GetRow(std::vector<VEC_REAL> &out,int irow) const  {
       out.resize(GetNbCols());
       if(!out.empty())
         mInter->GetRow(&(out[0]),irow);
@@ -670,7 +667,7 @@ namespace Easdif {
      * 
      */
     template <class TT>
-    void GetCol(TT* out,int icol) const throw (SDIFArrayPosition){
+    void GetCol(TT* out,int icol) const {
       mInter->GetCol(out,icol);
       return;
     }
@@ -685,7 +682,7 @@ namespace Easdif {
      */
     template<class VEC_REAL>
     void
-    GetCol(std::vector<VEC_REAL> &out,int icol) const throw (SDIFArrayPosition) {
+    GetCol(std::vector<VEC_REAL> &out,int icol) const  {
       out.resize(GetNbRows());
       if(!out.empty())
         mInter->GetCol(&(out[0]),icol);
@@ -709,22 +706,22 @@ namespace Easdif {
      * 
      */
     template<typename Tin>
-    void Set(int i, int j, const Tin& value) throw (SDIFArrayPosition)
+    void Set(int i, int j, const Tin& value) 
     {
       mInter->Set(i, j, static_cast<double>(value) );
     }
   
-    void Set(int i, int j, const float value) throw (SDIFArrayPosition)
+    void Set(int i, int j, const float value)
     {
       mInter->Set(i, j, value);
     }
   
-    void Set(int i, int j, const int value) throw (SDIFArrayPosition)
+    void Set(int i, int j, const int value)
     {
       mInter->Set(i, j, value);
     }
 
-    void Set(int i, int j, const unsigned char value) throw (SDIFArrayPosition)
+    void Set(int i, int j, const unsigned char value)
     {
       mInter->Set(i, j, value);
     }
@@ -756,7 +753,7 @@ namespace Easdif {
      */
 
     template <class TT>
-    void SetRow(const TT* in_arr,int irow)  throw (SDIFArrayPosition) {
+    void SetRow(const TT* in_arr,int irow) {
       mInter->SetRow(in_arr,irow);
       return;
     }
@@ -771,7 +768,7 @@ namespace Easdif {
      */
     template <class VECVAL_T>
     void
-    SetRow(const std::vector<VECVAL_T> &inVec,int irow) throw (SDIFArrayPosition) {
+    SetRow(const std::vector<VECVAL_T> &inVec,int irow){
       if(static_cast<int>(inVec.size()) != GetNbCols())
   	throw SDIFArrayPosition(eError,
 				"Error in  SDIFMatrix::SetRow!!! vector size of input vector does not match number of columns !!!",
@@ -790,7 +787,7 @@ namespace Easdif {
      * 
      */
     template <class TT>
-    void SetCol(const TT* in_arr,int icol)  throw (SDIFArrayPosition){
+    void SetCol(const TT* in_arr,int icol){
       mInter->SetCol(in_arr,icol);
       return;
     }
@@ -805,7 +802,7 @@ namespace Easdif {
      */
     template <class VECVAL_T>
     void
-    SetCol(const std::vector<VECVAL_T> &inVec, int icol) throw (SDIFArrayPosition) {
+    SetCol(const std::vector<VECVAL_T> &inVec, int icol)  {
       if(static_cast<int>(inVec.size()) != GetNbRows()){
   	throw SDIFArrayPosition(eError,
 				"Error in  SDIFMatrix::SetCol:: vector size of input vector does not match number of rows !!!",
