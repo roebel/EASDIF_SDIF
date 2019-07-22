@@ -1,7 +1,6 @@
 # Disclaimer
 
-This github repos is a manually managed mirror  providing access to the EASDIF_SDIF directory of the SourceForge 
-SDIF repos.
+This github repos is a semi-automatically managed mirror providing access to the EASDIF_SDIF directory of the SourceForge SDIF repos. The merging is performed using the merge_subversion_changes.sh script in the git root dir that uses .revision entries in all the subdirs that contain externals in the subversion repos to track the versions.
 
    Copyright (C) Ircam 2002-2018
 
